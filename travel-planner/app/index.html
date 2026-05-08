@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderAI — AI Travel Planner</title>
+  <meta name="description" content="Plan your perfect trip with AI. Get personalized itineraries, real-time weather, and interactive maps powered by Google Gemini.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-icon">✈️</div>
+      WanderAI
+    </a>
+    <ul class="navbar-links">
+      <li><a href="#how-it-works">How it Works</a></li>
+      <li><a href="#features">Features</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" aria-label="Trip planning">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="form-card" role="main">
+        <h1>Plan Your Perfect Trip<br>with <span class="highlight">AI</span></h1>
+        <p class="subtitle">Personalized itineraries tailored to your style, budget & preferences</p>
+
+        <form id="trip-form" novalidate>
+          <!-- Destination -->
+          <div class="form-group">
+            <label for="destination">Destination</label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">🌍</span>
+              <input type="text" id="destination" class="form-input" placeholder="Where to? e.g., Paris, France" autocomplete="off" required aria-required="true">
+            </div>
+            <span class="field-error" id="destination-error" role="alert"></span>
+          </div>
+
+          <!-- Dates -->
+          <div class="form-group">
+            <label>Travel Dates</label>
+            <div class="date-row">
+              <div class="input-wrapper">
+                <input type="date" id="start-date" class="form-input" aria-label="Start date" required>
+              </div>
+              <div class="input-wrapper">
+                <input type="date" id="end-date" class="form-input" aria-label="End date" required>
+              </div>
+            </div>
+            <span class="field-error" id="date-error" role="alert"></span>
+          </div>
+
+          <!-- Budget -->
+          <div class="form-group">
+            <label>Budget</label>
+            <div class="pill-group" role="radiogroup" aria-label="Budget selection">
+              <button type="button" class="pill" data-value="budget" onclick="selectPill(this, 'budget-group')" id="budget-budget">💰 Budget</button>
+              <button type="button" class="pill active" data-value="mid-range" onclick="selectPill(this, 'budget-group')" id="budget-midrange">💎 Mid-range</button>
+              <button type="button" class="pill" data-value="luxury" onclick="selectPill(this, 'budget-group')" id="budget-luxury">👑 Luxury</button>
+            </div>
+            <input type="hidden" id="budget" value="mid-range">
+          </div>
+
+          <!-- Travel Style -->
+          <div class="form-group">
+            <label>Travel Style <span class="label-hint">(select all that apply)</span></label>
+            <div class="chip-group" role="group" aria-label="Travel style">
+              <button type="button" class="chip active" data-value="adventure" onclick="toggleChip(this)" id="style-adventure">🏔️ Adventure</button>
+              <button type="button" class="chip" data-value="relaxation" onclick="toggleChip(this)" id="style-relaxation">🧘 Relaxation</button>
+              <button type="button" class="chip active" data-value="culture" onclick="toggleChip(this)" id="style-culture">🏛️ Culture</button>
+              <button type="button" class="chip" data-value="food" onclick="toggleChip(this)" id="style-food">🍕 Food</button>
+              <button type="button" class="chip" data-value="nature" onclick="toggleChip(this)" id="style-nature">🌿 Nature</button>
+              <button type="button" class="chip" data-value="shopping" onclick="toggleChip(this)" id="style-shopping">🛍️ Shopping</button>
+            </div>
+          </div>
+
+          <!-- Group Size -->
+          <div class="form-group">
+            <label>Group Size</label>
+            <div class="group-row">
+              <div class="stepper">
+                <span class="stepper-label">Adults</span>
+                <div class="stepper-controls">
+                  <button type="button" class="stepper-btn" onclick="step('adults', -1)" aria-label="Decrease adults">−</button>
+                  <span class="stepper-value" id="adults-value">2</span>
+                  <button type="button" class="stepper-btn" onclick="step('adults', 1)" aria-label="Increase adults">+</button>
+                </div>
+              </div>
+              <div class="stepper">
+                <span class="stepper-label">Children</span>
+                <div class="stepper-controls">
+                  <button type="button" class="stepper-btn" onclick="step('children', -1)" aria-label="Decrease children">−</button>
+                  <span class="stepper-value" id="children-value">0</span>
+                  <button type="button" class="stepper-btn" onclick="step('children', 1)" aria-label="Increase children">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Special Requirements -->
+          <div class="form-group">
+            <label for="constraints">Special Requirements <span class="label-hint">(optional)</span></label>
+            <textarea id="constraints" class="form-textarea" placeholder="e.g., vegetarian food, wheelchair accessible, pet-friendly..." rows="2"></textarea>
+          </div>
+
+          <!-- CTA -->
+          <button type="submit" class="btn-plan" id="plan-btn">
+            <span class="btn-text">✨ Plan My Trip</span>
+            <span class="btn-loader" hidden>⏳ Generating...</span>
+          </button>
+
+          <div class="powered-by">
+            Powered by
+            <span class="google-badge">🤖 Google Gemini</span>
+            +
+            <span class="google-badge">🗺️ Google Maps</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="features-section" aria-label="Features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI-Powered</h3>
+        <p>Google Gemini crafts personalized day-by-day itineraries based on your unique preferences</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌦️</div>
+        <h3>Live Weather</h3>
+        <p>Real-time weather forecasts for your destination integrated directly into your itinerary</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Interactive Maps</h3>
+        <p>Visualize all your activities on Google Maps with clickable markers and route planning</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Personalized</h3>
+        <p>Tailored to your budget, travel style, group size and any special requirements</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

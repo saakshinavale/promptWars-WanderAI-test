@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderAI — Your Itinerary</title>
+  <meta name="description" content="Your AI-generated travel itinerary with interactive maps and real-time weather.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="results-page">
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-icon">✈️</div>
+      WanderAI
+    </a>
+    <button class="btn-new-trip" onclick="window.location.href='index.html'" id="new-trip-btn">+ New Trip</button>
+  </nav>
+
+  <!-- Trip Header -->
+  <header class="trip-header" id="trip-header" aria-label="Trip summary">
+    <div class="trip-info">
+      <h1 class="trip-title" id="trip-title">Loading...</h1>
+      <div class="trip-meta" id="trip-meta"></div>
+    </div>
+    <div class="trip-actions">
+      <button class="btn-action" id="regenerate-btn" onclick="regenerateTrip()" aria-label="Regenerate itinerary">🔄 Regenerate</button>
+      <button class="btn-action" id="print-btn" onclick="window.print()" aria-label="Print itinerary">🖨️ Print</button>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div id="loading-state" class="loading-state" role="status" aria-live="polite">
+    <div class="loading-spinner"></div>
+    <h2>✨ Crafting your perfect itinerary...</h2>
+    <p>Google Gemini is planning your trip</p>
+    <div class="loading-steps">
+      <div class="loading-step active" id="step-ai">🤖 Generating AI itinerary</div>
+      <div class="loading-step" id="step-weather">🌦️ Fetching weather forecast</div>
+      <div class="loading-step" id="step-map">🗺️ Loading map</div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div id="error-state" class="error-state" hidden role="alert">
+    <div class="error-icon">⚠️</div>
+    <h2>Something went wrong</h2>
+    <p id="error-message">Unable to generate your itinerary. Please try again.</p>
+    <button class="btn-plan" onclick="window.location.href='index.html'">← Try Again</button>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-layout" id="main-content" hidden>
+    <!-- Itinerary Panel -->
+    <section class="itinerary-panel" aria-label="Trip itinerary">
+
+      <!-- Weather Banner -->
+      <div class="weather-banner" id="weather-banner" role="complementary" aria-label="Weather forecast">
+        <span class="weather-icon-large" id="weather-icon">⛅</span>
+        <div class="weather-info">
+          <h3 id="weather-title">Weather Forecast</h3>
+          <p id="weather-desc">Loading...</p>
+        </div>
+        <div class="weather-temps">
+          <div class="temp-high" id="temp-high">--°C</div>
+          <div class="temp-range" id="temp-range">Low: --°C</div>
+        </div>
+      </div>
+
+      <!-- Itinerary Days -->
+      <div id="itinerary-container" aria-label="Day by day itinerary"></div>
+
+      <!-- Budget Summary -->
+      <div class="budget-summary" id="budget-summary" role="complementary" aria-label="Budget summary" hidden>
+        <div class="budget-title">💰 Estimated Total Budget</div>
+        <div class="budget-amount" id="budget-amount"></div>
+        <div class="budget-tips" id="budget-tips"></div>
+      </div>
+
+      <!-- Tips Section -->
+      <div class="tips-section" id="tips-section" hidden>
+        <h3 class="tips-title">💡 Travel Tips</h3>
+        <ul class="tips-list" id="tips-list"></ul>
+      </div>
+    </section>
+
+    <!-- Map Panel -->
+    <section class="map-panel" aria-label="Trip map">
+      <div id="map" style="width:100%;height:100%;min-height:500px;"></div>
+      <div id="map-loading" class="map-loading">
+        <div class="loading-spinner small"></div>
+        <p>Loading map...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/services/weather.js"></script>
+  <script src="js/services/gemini.js"></script>
+  <script src="js/results.js"></script>
+  <!-- Google Maps loaded dynamically in results.js -->
+</body>
+</html>
